@@ -1,0 +1,95 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+
+
+
+Documentation	This test suite validates project creation functionality, including CRUD operations: Create, Read, Update, Delete.
+
+
+
+
+Pre Condition	The application is running, user has completed registration, and the project creation page is accessible.
+Post Condition	Close the browser and clean up any test-created projects.
+Tags  Project Creation, CRUD, Validation, Error Handling, TS-3-Project-Creation
+
+#******************* Common Variables ********************
+
+ProjectCreationUrl = "https://example.com/projects/new"
+Valid_ProjectName = "TestProject123"
+Duplicate_ProjectName = "ExistingProject123"
+Invalid_ProjectName = "!!!InvalidName!!!"
+Private_Visibility = "Private"
+Public_Visibility = "Public"
+Enable_ReadMe = "Yes"
+Enable_SAST = "Yes"
+
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+# Positive Tests
+
+Create a blank project
+	Navigate to the project creation page (ProjectCreationUrl).
+	Enter a valid project name (Valid_ProjectName).
+	Select the public visibility option (Public_Visibility).
+	Leave additional configurations empty (ReadMe and SAST).
+	Submit the form to create the project.
+	Verify that a success message is displayed, indicating that the project was successfully created.
+	Validate that the project appears in the user's project list.
+
+Create a template project
+	Navigate to the project creation page (ProjectCreationUrl).
+	Choose template from the options below.
+	Enter a valid project name (Valid_ProjectName + "Template").
+	Write project description if needed.
+	Select project deployment target (optional).
+	Select the private visibility option (Private_Visibility).
+	Submit the form to create the project.
+	Verify that a success message is displayed.
+	Validate that the project appears in the user's project list.
+
+Update the name of a template project
+	Create a template project as described above.
+	Navigate to the project's settings.
+	Change the project name to Valid_ProjectName + "Updated".
+	Submit the changes.
+	Verify that the project name is updated successfully.
+	Confirm that the project list reflects the updated name.
+
+Delete a template project
+	Create a template project as described above.
+	Navigate to the project settings.
+	Choose Advanced.
+	Choose to delete the project.
+	Confirm the deletion.
+	Verify that a success message is displayed, indicating that the project was deleted.
+	Validate that the project no longer appears in the user's project list.
+		
+# Negative Test examples are below write test process steps for each below test case
+
+Create a blank project with the same name
+	Create a blank project with a valid name (Valid_ProjectName).
+	Navigate to the project creation page (ProjectCreationUrl).
+	Enter the same project name (Valid_ProjectName).
+	Submit the form.
+	Verify that an error message is displayed, indicating that a project with that name already exists.
+	Confirm that the project is not created.
+
+Create a project with an invalid name
+	Navigate to the project creation page (ProjectCreationUrl).
+	Enter an invalid project name (Invalid_ProjectName).
+	Submit the form.
+	Verify that an error message is displayed, indicating that the project name is invalid.
+	Confirm that the project is not created.
+
+Attempt to delete a non-existing project
+	Navigate to a non-existing project's URL.
+	Try to delete the project.
+	Verify that an error message is displayed, indicating the project does not exist.
+	Confirm that no unintended changes occur.
+

@@ -1,0 +1,106 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+Documentation	Issue Test scenario. CRUD Operation: Create, Read, Update, Delete
+
+
+
+Pre Condition    Project must be created by the user before 
+Post Condition	 Cleanup of created issues and other test-related data.
+Tags Issue Management, CRUD, Error Handling, TS-4-Issue-Creation
+
+#******************* Common Variables ********************
+
+
+*** Variables ***
+
+
+Valid_IssueName = "NewIssue"
+Updated_IssueName = "UpdatedIssue"
+Duplicate_IssueName = "DuplicateIssue"
+Invalid_IssueName = "!!!InvalidName!!!"
+MilestoneName = "Milestone1"
+WeightValue = 3 # A typical weight value for issue tracking
+Labels = ["Bug", "Feature"] # List of common labels
+DueDate = "2024-05-01" # Example due date
+AssignedUser = "AssignedUser123" # Example assigned user
+IterationName = "Sprint1" # Example iteration or sprint name
+EpicName = "Epic1" # Example epic name
+Empty_Field = ""
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+
+# Positive Tests
+
+Create a new issue
+	Navigate to the issue creation page (IssueCreationUrl).
+	Choose the project you want to create issue for.
+	Enter a valid issue name (Valid_IssueName).
+	Choose type (Issue or Incident).
+	Provide a description of the issue (optional).
+	Choose wheter this issue is confidential and should only be visible to team members with at least Reporter access or not.
+	Choose whom this issue is assigned to.
+	Choose epic or no epic.
+	Choose weight [1:].
+	Choose Milestone.
+	Choose labels.
+	Choose iteration.
+	Set a due date.
+	Submit the form to create the issue.
+	Verify that a success message is displayed, indicating the issue was successfully created.
+	Confirm the issue appears in the list of issues for the project.
+	
+
+Update the milestone, weight, and labels of an issue
+	Create a new issue as described above.
+	Navigate to the issue's details(or they will appear on the right).
+	Change the milestone to a different one (e.g., "Milestone2").
+	Update the weight to a new value (e.g., 5).
+	Change the labels (e.g., ["Enhancement"]).
+	Submit the changes.
+	Verify that a success message is displayed, indicating the updates were successful.
+	Confirm that the issue's attributes reflect the new milestone, weight, and labels.
+
+Delete an issue
+	Create a new issue with the described attributes.
+	Navigate to the issue's settings (on the right (3 buttons)).
+	Choose to delete the issue.
+	Confirm the deletion.
+	Verify that a success message is displayed, indicating the issue was successfully deleted.
+	Confirm that the deleted issue no longer appears in the list of issues.
+
+# Negative Tests
+
+Attempt to create an issue with a duplicate name and same milestone
+	Create an issue with a specific name and milestone.
+	Navigate to the issue creation page (IssueCreationUrl).
+	Enter the same issue name with the same milestone.
+	Submit the form.
+	Verify that an error message is displayed (DuplicateNameError), indicating an issue with that name and milestone already exists.
+	Confirm that the issue is not created.
+
+Create an issue with an invalid due date
+	Navigate to the issue creation page (IssueCreationUrl).
+	Enter a valid issue name (Valid_IssueName).
+	Enter an invalid due date (Invalid_DueDate).
+	Submit the form to create the issue.
+	Verify that an error message (InvalidDueDateError) is displayed, indicating the due date format is incorrect.
+	Confirm that the issue is not created.
+
+Attempt to create an issue with an empty name
+	Navigate to the issue creation page (IssueCreationUrl).
+	Leave the issue name field empty (Empty_Field).
+	Submit the form.
+	Verify that an error message is displayed, indicating that the issue name is required.
+	Confirm that the issue is not created.
+
+Attempt to delete a non-existent issue
+	Navigate to a non-existent issue's URL.
+	Attempt to delete the issue.
+	Verify that an error message (DeletionError) is displayed, indicating the issue does not exist.
+	Confirm that no changes occur in the list of existing issues.

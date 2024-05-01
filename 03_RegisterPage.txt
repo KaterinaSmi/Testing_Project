@@ -1,0 +1,99 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+
+
+Documentation test scenarios for user registration, including verification, reCAPTCHA validation, 
+and invalid credentials.
+
+
+Pre Condition Ensure the application is running, the registration page is accessible,
+and any exiting test data is cleared.
+Post Condition	Close browser and clear all cookies/cache
+Tags Security, Validation, TS-2-User-Registration
+
+#******************* Common Variables ********************
+
+*** Variables ***
+
+LoginUrl = https://gitlab.com/users/sign_up
+Valid_Username = "validUser123"
+Valid_Password = "SecureP@ssw0rd!"
+Valid_Email = "validuser123@example.com"
+Invalid_Username = "invalidUser123"
+Invalid_Password = "123"
+Invalid_Email = "invalid_email@example"
+Empty_Field = ""
+Existing_Username = "existingUser123"
+
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+
+# Positive Tests 
+
+Register user with valid username and password 
+	Navigate to the registration page (LoginUrl).
+	Enter a valid username (Valid_Username).
+	Enter a secure password (Valid_Password).
+	Enter a valid email address (Valid_Email).
+	Submit the registration form.
+	Verify registration success by checking for a welcome message or redirection to a specific page.
+	Confirm that an email verification message is sent to the registered email.
+
+Register user with mixed-case email
+	Navigate to the registration page (LoginUrl).
+	Enter a valid username (Valid_Username).
+	Enter a secure password (Valid_Password).
+	Enter a mixed-case valid email address (e.g., VaLiDuSeR123@Example.Com).
+	Submit the registration form.
+	Verify registration success.
+	Confirm that email verification is sent.
+
+Register user with valid username, password, and reCAPTCHA
+	Navigate to the registration page (LoginUrl).
+	Enter a valid username (Valid_Username).
+	Enter a secure password (Valid_Password).
+	Enter a valid email address (Valid_Email).
+	Complete the reCAPTCHA.
+	Submit the registration form.
+	Verify registration success and that reCAPTCHA was accepted.
+
+
+# Negative Tests
+
+Register user with existing username
+	Navigate to the registration page (RegistrationUrl).
+	Enter an existing username (Existing_Username).
+	Enter a secure password (Valid_Password).
+	Enter a valid email address (Valid_Email).
+	Submit the registration form.
+	Verify that an error message indicates the username is already taken.
+		
+Register user with empty password
+	Navigate to the registration page (RegistrationUrl).
+	Enter a valid username (Valid_Username).
+	Leave the password field empty (Empty_Field).
+	Enter a valid email address (Valid_Email).
+	Submit the registration form.
+	Verify that an error message indicates that the password field is required.
+
+Register user with invalid email format
+	Navigate to the registration page (RegistrationUrl).
+	Enter a valid username (Valid_Username).
+	Enter a secure password (Valid_Password).
+	Enter an invalid email address (Invalid_Email).
+	Submit the registration form.
+	Verify that an error message indicates the email format is invalid.
+
+Register user without reCAPTCHA
+	Navigate to the registration page (LoginUrl).
+	Enter a valid username (Valid_Username).
+	Enter a secure password (Valid_Password).
+	Enter a valid email address (Valid_Email).
+	Submit the registration form without completing the reCAPTCHA.
+	Verify that an error message indicates reCAPTCHA is required.
